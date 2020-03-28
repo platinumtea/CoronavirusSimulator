@@ -4,7 +4,7 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class CoronaPanel extends JPanel {
-	private final int DELAY = 10, PEOPLE = 300, RECORD_RATE = 2, GRAPH_SCALING = 2, IMMOBILE = 250;
+	private final int DELAY = 10, PEOPLE = 300, RECORD_RATE = 2, GRAPH_SCALING = 2, IMMOBILE = 200, CAPACITY = 50;
 	static final int WIDTH = 600, HEIGHT = 800;
 	Timer timer;
 	private int tick, timerTriggers;
@@ -109,56 +109,72 @@ public class CoronaPanel extends JPanel {
 		for (int i = 0; i < tick; i++) {
 			int temp = HEIGHT + (PEOPLE / GRAPH_SCALING);
 
+			page.setColor(Color.pink);
+			page.drawLine(i, temp - ((int) Math.ceil(graph[2][i] / GRAPH_SCALING)), i, temp);
+			temp -= Math.ceil(graph[2][i] / GRAPH_SCALING);
+
 			page.setColor(Color.red);
-			page.drawLine(i, temp - (graph[1][i] / GRAPH_SCALING), i, temp);
-			temp -= (graph[1][i] / GRAPH_SCALING);
+			page.drawLine(i, temp - ((int) Math.ceil(graph[1][i] / GRAPH_SCALING)), i, temp);
+			temp -= Math.ceil(graph[1][i] / GRAPH_SCALING);
 
 			page.setColor(Color.green);
-			page.drawLine(i, temp - (graph[0][i] / GRAPH_SCALING), i, temp);
-			temp -= (graph[0][i] / GRAPH_SCALING);
-
-			page.setColor(Color.pink);
-			page.drawLine(i, temp - (graph[2][i] / GRAPH_SCALING), i, temp);
-			temp -= (graph[2][i] / GRAPH_SCALING);
+			page.drawLine(i, temp - ((int) Math.ceil(graph[0][i] / GRAPH_SCALING)), i, temp);
+			temp -= Math.ceil(graph[0][i] / GRAPH_SCALING);
 
 			page.setColor(Color.blue);
-			page.drawLine(i, temp - (graph[3][i] / GRAPH_SCALING), i, temp);
-			temp -= (graph[3][i] / GRAPH_SCALING);
+			page.drawLine(i, temp - ((int) Math.ceil(graph[3][i] / GRAPH_SCALING)), i, temp);
+			temp -= Math.ceil(graph[3][i] / GRAPH_SCALING);
 
 			page.setColor(Color.gray);
 			page.drawLine(i, HEIGHT, i, temp);
 		}
+		page.setColor(Color.black);
+		page.drawLine(0, HEIGHT + ((PEOPLE - CAPACITY) / GRAPH_SCALING), WIDTH,
+				HEIGHT + ((PEOPLE - CAPACITY) / GRAPH_SCALING));
 
 		// Draw graph (distanced)
-		for (int i = WIDTH; i < WIDTH + tick; i++) {
+		for (int i = WIDTH + 2; i < WIDTH + tick; i++) {
 			int temp = HEIGHT + (PEOPLE / GRAPH_SCALING);
 
+			page.setColor(Color.pink);
+			page.drawLine(i, temp - ((int) Math.ceil(graphDistanced[2][i - WIDTH] / GRAPH_SCALING)), i, temp);
+			temp -= Math.ceil((graphDistanced[2][i - WIDTH] / GRAPH_SCALING));
+
 			page.setColor(Color.red);
-			page.drawLine(i, temp - (graphDistanced[1][i - WIDTH] / GRAPH_SCALING), i, temp);
-			temp -= (graphDistanced[1][i - WIDTH] / GRAPH_SCALING);
+			page.drawLine(i, temp - ((int) Math.ceil(graphDistanced[1][i - WIDTH] / GRAPH_SCALING)), i, temp);
+			temp -= Math.ceil((graphDistanced[1][i - WIDTH] / GRAPH_SCALING));
 
 			page.setColor(Color.green);
-			page.drawLine(i, temp - (graphDistanced[0][i - WIDTH] / GRAPH_SCALING), i, temp);
-			temp -= (graphDistanced[0][i - WIDTH] / GRAPH_SCALING);
-
-			page.setColor(Color.pink);
-			page.drawLine(i, temp - (graphDistanced[2][i - WIDTH] / GRAPH_SCALING), i, temp);
-			temp -= (graphDistanced[2][i - WIDTH] / GRAPH_SCALING);
+			page.drawLine(i, temp - ((int) Math.ceil(graphDistanced[0][i - WIDTH] / GRAPH_SCALING)), i, temp);
+			temp -= Math.ceil((graphDistanced[0][i - WIDTH] / GRAPH_SCALING));
 
 			page.setColor(Color.blue);
-			page.drawLine(i, temp - (graphDistanced[3][i - WIDTH] / GRAPH_SCALING), i, temp);
-			temp -= (graphDistanced[3][i - WIDTH] / GRAPH_SCALING);
+			page.drawLine(i, temp - ((int) Math.ceil(graphDistanced[3][i - WIDTH] / GRAPH_SCALING)), i, temp);
+			temp -= Math.ceil((graphDistanced[3][i - WIDTH] / GRAPH_SCALING));
 
 			page.setColor(Color.gray);
 			page.drawLine(i, HEIGHT, i, temp);
 		}
+		page.setColor(Color.black);
+		page.drawLine(WIDTH, HEIGHT + ((PEOPLE - CAPACITY) / GRAPH_SCALING), WIDTH * 2,
+				HEIGHT + ((PEOPLE - CAPACITY) / GRAPH_SCALING));
 	}
 
 	private class CoronaListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			for (int i = 0; i < people.length; i++) {
 				people[i].tick();
+				if (people[i].isInfected() && i < PEOPLE * 0.2 && graph[2][i] < CAPACITY) {
+					people[i].hospitalize();
+				} else if (people[i].isInfected() && i < PEOPLE * 0.2) {
+					people[i].kill();
+				}
 				peopleDistanced[i].tick();
+				if (peopleDistanced[i].isInfected() && i < PEOPLE * 0.2 && graphDistanced[2][i] < CAPACITY) {
+					peopleDistanced[i].hospitalize();
+				} else if (peopleDistanced[i].isInfected() && i < PEOPLE * 0.2) {
+					peopleDistanced[i].kill();
+				}
 			}
 			repaint();
 			timerTriggers++;
