@@ -67,7 +67,7 @@ public class CoronaPanel extends JPanel {
 			if (timerTriggers % RECORD_RATE == 0 && people[i].getStatus() != 4) {
 				graph[people[i].getStatus()][tick]++;
 			}
-			page.fillOval(people[i].getX(), people[i].getY(), 10, 10);
+			page.fillOval((int) people[i].getX(), (int) people[i].getY(), 10, 10);
 			for (int j = 0; j < people.length; j++) {
 				if (i != j) {
 					people[i].check(people[j]);
@@ -97,7 +97,7 @@ public class CoronaPanel extends JPanel {
 			if (timerTriggers % RECORD_RATE == 0 && peopleDistanced[i].getStatus() != 4) {
 				graphDistanced[peopleDistanced[i].getStatus()][tick]++;
 			}
-			page.fillOval(peopleDistanced[i].getX(), peopleDistanced[i].getY(), 10, 10);
+			page.fillOval((int) peopleDistanced[i].getX(), (int) peopleDistanced[i].getY(), 10, 10);
 			for (int j = 0; j < peopleDistanced.length; j++) {
 				if (i != j) {
 					peopleDistanced[i].check(peopleDistanced[j]);

@@ -1,6 +1,6 @@
 
 public class Person {
-	private int x, y, xVel, yVel;
+	private double x, y, xVel, yVel;
 	private int status; // 0 for healthy, 1 for infected, 2 for hospitalized , 3 for recovered, 4 for
 						// dead
 	private int ticksSinceInfected;
@@ -12,8 +12,8 @@ public class Person {
 		this.y = y;
 		this.immobile = immobile;
 		risk = Math.random();
-		xVel = (int) (Math.random() * 4 - 2);
-		yVel = (int) (Math.sqrt(4 - Math.pow(xVel, 2))) * (Math.random() < 0.5 ? -1 : 1);
+		xVel = Math.random() * 4.0 - 2.0;
+		yVel = Math.sqrt(4 - Math.pow(xVel, 2)) * (Math.random() < 0.5 ? -1.0 : 1.0);
 		ticksSinceInfected = 0;
 		status = (infected ? 1 : 0);
 		firstInfected = infected;
@@ -56,9 +56,11 @@ public class Person {
 				if (p.getStatus() == 1 && Math.random() < 0.85 && status == 0) {
 					status = 1;
 				}
-				xVel = (int) (Math.random() * 2 * (x - p.getX() < 0 ? -1 : 1));
-				yVel = (int) (Math.sqrt(4 - Math.pow(xVel, 2))) * (y - p.getY() < 0 ? -1 : 1);
-				p.ignoreCheck();
+				if (!immobile) {
+					xVel = (Math.random() * 2 * (x - p.getX() < 0 ? -1.0 : 1.0));
+					yVel = (Math.sqrt(4 - Math.pow(xVel, 2))) * (y - p.getY() < 0 ? -1.0 : 1.0);
+					p.ignoreCheck();
+				}
 				if (firstInfected) {
 					firstInfected = false;
 				}
@@ -80,19 +82,19 @@ public class Person {
 		return status;
 	}
 
-	public int getX() {
+	public double getX() {
 		return x;
 	}
 
-	public void setX(int x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return y;
 	}
 
-	public void setY(int y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 
