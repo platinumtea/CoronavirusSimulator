@@ -4,7 +4,7 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class CoronaPanel extends JPanel {
-	private final int DELAY = 10, PEOPLE = 300, RECORD_RATE = 2, GRAPH_SCALING = 2, IMMOBILE = 200;
+	private final int DELAY = 10, PEOPLE = 300, RECORD_RATE = 2, GRAPH_SCALING = 2, IMMOBILE = 250;
 	static final int WIDTH = 600, HEIGHT = 800;
 	Timer timer;
 	private int tick, timerTriggers;
@@ -23,17 +23,17 @@ public class CoronaPanel extends JPanel {
 		int infected = (int) (Math.random() * PEOPLE);
 		for (int i = 0; i < people.length; i++) {
 			people[i] = new Person((int) (Math.random() * (WIDTH - 10)), (int) (Math.random() * (HEIGHT - 10)),
-					i == infected ? true : false, false);
+					i == infected ? true : false, false, false);
 		}
 
 		infected = (int) (Math.random() * (PEOPLE - IMMOBILE)) + IMMOBILE;
 		for (int i = 0; i < people.length; i++) {
 			if (i < IMMOBILE) {
 				peopleDistanced[i] = new Person((int) (Math.random() * (WIDTH - 10)) + WIDTH,
-						(int) (Math.random() * (HEIGHT - 10)), false, true);
+						(int) (Math.random() * (HEIGHT - 10)), false, true, true);
 			} else {
 				peopleDistanced[i] = new Person((int) (Math.random() * (WIDTH - 10)) + WIDTH,
-						(int) (Math.random() * (HEIGHT - 10)), i == infected ? true : false, false);
+						(int) (Math.random() * (HEIGHT - 10)), i == infected ? true : false, false, true);
 			}
 		}
 		timer = new Timer(DELAY, new CoronaListener());
