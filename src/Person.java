@@ -23,20 +23,20 @@ public class Person {
 
 	public void tick() {
 		if (status != 2 && status != 4 && !immobile) {
-			if(!isRight) {
+			if (!isRight) {
 				if (x + xVel + 10 > CoronaPanel.WIDTH || x + xVel < 0) {
 					xVel = -xVel;
 				}
 				if (y + yVel + 10 > CoronaPanel.HEIGHT || y + yVel < 0) {
 					yVel = -yVel;
-				}				
+				}
 			} else {
 				if (x + xVel + 10 > CoronaPanel.WIDTH * 2 || x + xVel < CoronaPanel.WIDTH) {
 					xVel = -xVel;
 				}
 				if (y + yVel + 10 > CoronaPanel.HEIGHT || y + yVel < 0) {
 					yVel = -yVel;
-				}		
+				}
 			}
 			x += xVel;
 			y += yVel;
@@ -53,7 +53,7 @@ public class Person {
 				ticksSinceHospitalized++;
 				if (ticksSinceHospitalized > 500 && risk < 0.5) {
 					status = 4;
-				} else if(ticksSinceHospitalized > 500) {
+				} else if (ticksSinceHospitalized > 500) {
 					status = 3;
 				}
 			}
@@ -66,7 +66,7 @@ public class Person {
 				if (p.getStatus() == 1 && Math.random() < 0.85 && status == 0) {
 					status = 1;
 				}
-				if (!immobile) {
+				if (!immobile && status != 2) {
 					xVel = (Math.random() * 2 * (x - p.getX() < 0 ? -1.0 : 1.0));
 					yVel = (Math.sqrt(4 - Math.pow(xVel, 2))) * (y - p.getY() < 0 ? -1.0 : 1.0);
 					p.ignoreCheck();
