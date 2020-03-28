@@ -4,10 +4,11 @@ import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class CoronaPanel extends JPanel {
-	private final int DELAY = 10, PEOPLE = 300, RECORD_RATE = 2, GRAPH_SCALING = 2, IMMOBILE = 250;
+	private final int DELAY = 10, PEOPLE = 300, RECORD_RATE = 2, GRAPH_SCALING = 2, IMMOBILE = 220, CAPACITY = 50;
 	static final int WIDTH = 600, HEIGHT = 800;
 	Timer timer;
 	private int tick, timerTriggers;
+	private int numHospitalized, numHospitalizedDistanced;
 
 	Person[] people, peopleDistanced;
 	int[][] graph, graphDistanced;
@@ -109,6 +110,10 @@ public class CoronaPanel extends JPanel {
 		for (int i = 0; i < tick; i++) {
 			int temp = HEIGHT + (PEOPLE / GRAPH_SCALING);
 
+			page.setColor(Color.pink);
+			page.drawLine(i, temp - (graph[2][i] / GRAPH_SCALING), i, temp);
+			temp -= (graph[2][i] / GRAPH_SCALING);
+
 			page.setColor(Color.red);
 			page.drawLine(i, temp - (graph[1][i] / GRAPH_SCALING), i, temp);
 			temp -= (graph[1][i] / GRAPH_SCALING);
@@ -117,9 +122,6 @@ public class CoronaPanel extends JPanel {
 			page.drawLine(i, temp - (graph[0][i] / GRAPH_SCALING), i, temp);
 			temp -= (graph[0][i] / GRAPH_SCALING);
 
-			page.setColor(Color.pink);
-			page.drawLine(i, temp - (graph[2][i] / GRAPH_SCALING), i, temp);
-			temp -= (graph[2][i] / GRAPH_SCALING);
 
 			page.setColor(Color.blue);
 			page.drawLine(i, temp - (graph[3][i] / GRAPH_SCALING), i, temp);
@@ -128,6 +130,8 @@ public class CoronaPanel extends JPanel {
 			page.setColor(Color.gray);
 			page.drawLine(i, HEIGHT, i, temp);
 		}
+		page.setColor(Color.black);
+		page.drawLine(0, HEIGHT + ((PEOPLE - CAPACITY) / GRAPH_SCALING), WIDTH, HEIGHT + ((PEOPLE - CAPACITY) / GRAPH_SCALING));
 
 		// Draw graph (distanced)
 		for (int i = WIDTH; i < WIDTH + tick; i++) {
@@ -152,13 +156,27 @@ public class CoronaPanel extends JPanel {
 			page.setColor(Color.gray);
 			page.drawLine(i, HEIGHT, i, temp);
 		}
+		page.setColor(Color.black);
+		page.drawLine(WIDTH, HEIGHT + ((PEOPLE - CAPACITY) / GRAPH_SCALING), WIDTH * 2, HEIGHT + ((PEOPLE - CAPACITY) / GRAPH_SCALING));
 	}
 
 	private class CoronaListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			for (int i = 0; i < people.length; i++) {
 				people[i].tick();
+				if(people[i].isInfected() && i < PEOPLE * 0.2 && numHospitalized < CAPACITY) {
+					people[i].hospitalize();
+					numHospitalized++;
+				} else if (people[i].isInfected() && i < PEOPLE * 0.2){
+					people[i].kill();
+				}
 				peopleDistanced[i].tick();
+				if(peopleDistanced[i].isInfected() && i < PEOPLE * 0.2 && numHospitalizedDistanced < CAPACITY) {
+					peopleDistanced[i].hospitalize();
+					numHospitalizedDistanced++;
+				} else if (peopleDistanced[i].isInfected() && i < PEOPLE * 0.2) {
+					peopleDistanced[i].kill();
+				}
 			}
 			repaint();
 			timerTriggers++;
