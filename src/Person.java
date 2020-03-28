@@ -4,13 +4,14 @@ public class Person {
 	private int status; // 0 for healthy, 1 for infected, 2 for hospitalized , 3 for recovered, 4 for
 						// dead
 	private int ticksSinceInfected;
-	private boolean firstInfected, ignore, immobile;
+	private boolean firstInfected, ignore, immobile, isRight;
 	private double risk;
 
-	public Person(int x, int y, boolean infected, boolean immobile) {
+	public Person(int x, int y, boolean infected, boolean immobile, boolean isRight) {
 		this.x = x;
 		this.y = y;
 		this.immobile = immobile;
+		this.isRight = isRight;
 		risk = Math.random();
 		xVel = Math.random() * 4.0 - 2.0;
 		yVel = Math.sqrt(4 - Math.pow(xVel, 2)) * (Math.random() < 0.5 ? -1.0 : 1.0);
@@ -21,11 +22,20 @@ public class Person {
 
 	public void tick() {
 		if (status != 2 && status != 4 && !immobile) {
-			if (x + xVel + 10 > CoronaPanel.WIDTH || x + xVel < 0) {
-				xVel = -xVel;
-			}
-			if (y + yVel + 10 > CoronaPanel.HEIGHT || y + yVel < 0) {
-				yVel = -yVel;
+			if(!isRight) {
+				if (x + xVel + 10 > CoronaPanel.WIDTH || x + xVel < 0) {
+					xVel = -xVel;
+				}
+				if (y + yVel + 10 > CoronaPanel.HEIGHT || y + yVel < 0) {
+					yVel = -yVel;
+				}				
+			} else {
+				if (x + xVel + 10 > CoronaPanel.WIDTH * 2 || x + xVel < CoronaPanel.WIDTH) {
+					xVel = -xVel;
+				}
+				if (y + yVel + 10 > CoronaPanel.HEIGHT || y + yVel < 0) {
+					yVel = -yVel;
+				}		
 			}
 			x += xVel;
 			y += yVel;
