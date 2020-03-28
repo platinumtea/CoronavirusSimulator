@@ -137,6 +137,10 @@ public class CoronaPanel extends JPanel {
 		for (int i = WIDTH; i < WIDTH + tick; i++) {
 			int temp = HEIGHT + (PEOPLE / GRAPH_SCALING);
 
+			page.setColor(Color.pink);
+			page.drawLine(i, temp - (graphDistanced[2][i - WIDTH] / GRAPH_SCALING), i, temp);
+			temp -= (graphDistanced[2][i - WIDTH] / GRAPH_SCALING);
+
 			page.setColor(Color.red);
 			page.drawLine(i, temp - (graphDistanced[1][i - WIDTH] / GRAPH_SCALING), i, temp);
 			temp -= (graphDistanced[1][i - WIDTH] / GRAPH_SCALING);
@@ -145,9 +149,6 @@ public class CoronaPanel extends JPanel {
 			page.drawLine(i, temp - (graphDistanced[0][i - WIDTH] / GRAPH_SCALING), i, temp);
 			temp -= (graphDistanced[0][i - WIDTH] / GRAPH_SCALING);
 
-			page.setColor(Color.pink);
-			page.drawLine(i, temp - (graphDistanced[2][i - WIDTH] / GRAPH_SCALING), i, temp);
-			temp -= (graphDistanced[2][i - WIDTH] / GRAPH_SCALING);
 
 			page.setColor(Color.blue);
 			page.drawLine(i, temp - (graphDistanced[3][i - WIDTH] / GRAPH_SCALING), i, temp);
