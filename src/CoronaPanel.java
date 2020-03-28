@@ -1,16 +1,21 @@
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 @SuppressWarnings("serial")
 public class CoronaPanel extends JPanel {
-	private final int DELAY = 10, PEOPLE = 300, RECORD_RATE = 2, GRAPH_SCALING = 2, IMMOBILE = 200, CAPACITY = 50;
+	private final int DELAY = 10, PEOPLE = 300, RECORD_RATE = 2, IMMOBILE = 200, CAPACITY = 50;
+	private int graphScale = 2;
 	static final int WIDTH = 600, HEIGHT = 800;
 	Timer timer;
 	private int tick, timerTriggers;
 
 	Person[] people, peopleDistanced;
 	int[][] graph, graphDistanced;
+	
+	private JSlider scaleSlider;
 
 	public CoronaPanel() {
 		timerTriggers = 0;
@@ -36,8 +41,22 @@ public class CoronaPanel extends JPanel {
 						(int) (Math.random() * (HEIGHT - 10)), i == infected ? true : false, false, true);
 			}
 		}
+
+		scaleSlider = new JSlider(JSlider.HORIZONTAL, 1, 10, 2);
+		scaleSlider.setMajorTickSpacing(2); 
+		scaleSlider.setMinorTickSpacing(1);
+		scaleSlider.setPaintTicks(true);
+		scaleSlider.setPaintTicks(true);
+		scaleSlider.setPaintLabels(true);
+		scaleSlider.setAlignmentX(Component.LEFT_ALIGNMENT);
+		SliderListener sliderListener = new SliderListener();
+		scaleSlider.addChangeListener(sliderListener);
+		
+		add(scaleSlider);
+			
+		
 		timer = new Timer(DELAY, new CoronaListener());
-		setPreferredSize(new Dimension(WIDTH * 2, HEIGHT + (PEOPLE / GRAPH_SCALING)));
+		setPreferredSize(new Dimension(WIDTH * 2, HEIGHT + (PEOPLE / graphScale)));
 		setBackground(Color.white);
 		timer.start();
 	}
@@ -107,59 +126,68 @@ public class CoronaPanel extends JPanel {
 
 		// Draw graph (normal)
 		for (int i = 0; i < tick; i++) {
-			int temp = HEIGHT + (PEOPLE / GRAPH_SCALING);
+			int temp = HEIGHT + (PEOPLE / graphScale);
 
 			page.setColor(Color.pink);
-			page.drawLine(i, temp - ((int) Math.ceil(graph[2][i] / GRAPH_SCALING)), i, temp);
-			temp -= Math.ceil(graph[2][i] / GRAPH_SCALING);
+			page.drawLine(i, temp - ((int) Math.ceil(graph[2][i] / graphScale)), i, temp);
+			temp -= Math.ceil(graph[2][i] / graphScale);
 
 			page.setColor(Color.red);
-			page.drawLine(i, temp - ((int) Math.ceil(graph[1][i] / GRAPH_SCALING)), i, temp);
-			temp -= Math.ceil(graph[1][i] / GRAPH_SCALING);
+			page.drawLine(i, temp - ((int) Math.ceil(graph[1][i] / graphScale)), i, temp);
+			temp -= Math.ceil(graph[1][i] / graphScale);
 
 			page.setColor(Color.green);
-			page.drawLine(i, temp - ((int) Math.ceil(graph[0][i] / GRAPH_SCALING)), i, temp);
-			temp -= Math.ceil(graph[0][i] / GRAPH_SCALING);
+			page.drawLine(i, temp - ((int) Math.ceil(graph[0][i] / graphScale)), i, temp);
+			temp -= Math.ceil(graph[0][i] / graphScale);
 
 			page.setColor(Color.blue);
-			page.drawLine(i, temp - ((int) Math.ceil(graph[3][i] / GRAPH_SCALING)), i, temp);
-			temp -= Math.ceil(graph[3][i] / GRAPH_SCALING);
+			page.drawLine(i, temp - ((int) Math.ceil(graph[3][i] / graphScale)), i, temp);
+			temp -= Math.ceil(graph[3][i] / graphScale);
 
 			page.setColor(Color.gray);
 			page.drawLine(i, HEIGHT, i, temp);
 		}
 		page.setColor(Color.black);
-		page.drawLine(0, HEIGHT + ((PEOPLE - CAPACITY) / GRAPH_SCALING), WIDTH,
-				HEIGHT + ((PEOPLE - CAPACITY) / GRAPH_SCALING));
+		page.drawLine(0, HEIGHT + ((PEOPLE - CAPACITY) / graphScale), WIDTH,
+				HEIGHT + ((PEOPLE - CAPACITY) / graphScale));
 
 		// Draw graph (distanced)
-		for (int i = WIDTH + 2; i < WIDTH + tick; i++) {
-			int temp = HEIGHT + (PEOPLE / GRAPH_SCALING);
+		for (int i = WIDTH + 1; i < WIDTH + tick; i++) {
+			int temp = HEIGHT + (PEOPLE / graphScale);
 
 			page.setColor(Color.pink);
-			page.drawLine(i, temp - ((int) Math.ceil(graphDistanced[2][i - WIDTH] / GRAPH_SCALING)), i, temp);
-			temp -= Math.ceil((graphDistanced[2][i - WIDTH] / GRAPH_SCALING));
+			page.drawLine(i, temp - ((int) Math.ceil(graphDistanced[2][i - WIDTH] / graphScale)), i, temp);
+			temp -= Math.ceil((graphDistanced[2][i - WIDTH] / graphScale));
 
 			page.setColor(Color.red);
-			page.drawLine(i, temp - ((int) Math.ceil(graphDistanced[1][i - WIDTH] / GRAPH_SCALING)), i, temp);
-			temp -= Math.ceil((graphDistanced[1][i - WIDTH] / GRAPH_SCALING));
+			page.drawLine(i, temp - ((int) Math.ceil(graphDistanced[1][i - WIDTH] / graphScale)), i, temp);
+			temp -= Math.ceil((graphDistanced[1][i - WIDTH] / graphScale));
 
 			page.setColor(Color.green);
-			page.drawLine(i, temp - ((int) Math.ceil(graphDistanced[0][i - WIDTH] / GRAPH_SCALING)), i, temp);
-			temp -= Math.ceil((graphDistanced[0][i - WIDTH] / GRAPH_SCALING));
+			page.drawLine(i, temp - ((int) Math.ceil(graphDistanced[0][i - WIDTH] / graphScale)), i, temp);
+			temp -= Math.ceil((graphDistanced[0][i - WIDTH] / graphScale));
 
 			page.setColor(Color.blue);
-			page.drawLine(i, temp - ((int) Math.ceil(graphDistanced[3][i - WIDTH] / GRAPH_SCALING)), i, temp);
-			temp -= Math.ceil((graphDistanced[3][i - WIDTH] / GRAPH_SCALING));
+			page.drawLine(i, temp - ((int) Math.ceil(graphDistanced[3][i - WIDTH] / graphScale)), i, temp);
+			temp -= Math.ceil((graphDistanced[3][i - WIDTH] / graphScale));
 
 			page.setColor(Color.gray);
 			page.drawLine(i, HEIGHT, i, temp);
 		}
 		page.setColor(Color.black);
-		page.drawLine(WIDTH, HEIGHT + ((PEOPLE - CAPACITY) / GRAPH_SCALING), WIDTH * 2,
-				HEIGHT + ((PEOPLE - CAPACITY) / GRAPH_SCALING));
+		page.drawLine(WIDTH, HEIGHT + ((PEOPLE - CAPACITY) / graphScale), WIDTH * 2,
+				HEIGHT + ((PEOPLE - CAPACITY) / graphScale));
+		
+		page.drawLine(WIDTH, 0, WIDTH, HEIGHT + (PEOPLE / graphScale));
 	}
-
+	private class SliderListener implements ChangeListener {
+		
+		public void stateChanged(ChangeEvent e) {
+			graphScale = scaleSlider.getValue();
+			Corona.frame.setSize(new Dimension(WIDTH * 2 + 16, HEIGHT + (PEOPLE / graphScale) + 39));
+		}
+	}
+	
 	private class CoronaListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			for (int i = 0; i < people.length; i++) {
