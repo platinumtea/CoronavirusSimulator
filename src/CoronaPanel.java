@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class CoronaPanel extends JPanel {
 	private final int DELAY = 10, PEOPLE = 300, RECORD_RATE = 2, GRAPH_SCALING = 2;
 	static final int WIDTH = 600, HEIGHT = 800;
@@ -22,7 +23,7 @@ public class CoronaPanel extends JPanel {
 		dead = new int[WIDTH];
 		int infected = (int) (Math.random() * 100);
 		for (int i = 0; i < people.length; i++) {
-			people[i] = new Person((int) (Math.random() * WIDTH - 10), (int) (Math.random() * HEIGHT - 10),
+			people[i] = new Person((int) (Math.random() * (WIDTH - 10)), (int) (Math.random() * (HEIGHT - 10)),
 					i == infected ? true : false);
 		}
 		timer = new Timer(DELAY, new CoronaListener());
@@ -63,7 +64,7 @@ public class CoronaPanel extends JPanel {
 			}
 			page.fillOval(people[i].getX(), people[i].getY(), 10, 10);
 			for (int j = 0; j < people.length; j++) {
-				if(i != j) {
+				if (i != j) {
 					people[i].check(people[j]);
 				}
 			}
@@ -74,7 +75,7 @@ public class CoronaPanel extends JPanel {
 			page.setColor(Color.red);
 			page.drawLine(i, temp - (infected[i] / GRAPH_SCALING), i, temp);
 			temp -= (infected[i] / GRAPH_SCALING);
-			
+
 			page.setColor(Color.green);
 			page.drawLine(i, temp - (healthy[i] / GRAPH_SCALING), i, temp);
 			temp -= (healthy[i] / GRAPH_SCALING);
