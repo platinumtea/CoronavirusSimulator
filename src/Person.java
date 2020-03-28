@@ -50,24 +50,27 @@ public class Person {
 	}
 
 	public void check(Person p) {
-		if(!ignore) {
+		if (!ignore) {
 			if (Math.sqrt(Math.pow(x - p.getX(), 2) + Math.pow(y - p.getY(), 2)) < 10) {
-				if (p.getStatus() == 1 && Math.random() < 0.85) {
+				if (p.getStatus() == 1 && Math.random() < 0.85 && status == 0) {
 					status = 1;
 				}
 				xVel = (int) (Math.random() * 2 * (x - p.getX() < 0 ? -1 : 1));
 				yVel = (int) (Math.sqrt(4 - Math.pow(xVel, 2))) * (y - p.getY() < 0 ? -1 : 1);
 				p.ignoreCheck();
-			}	
+				if (firstInfected) {
+					firstInfected = false;
+				}
+			}
 		} else {
 			ignore = false;
 		}
 	}
-	
+
 	public void ignoreCheck() {
 		ignore = true;
 	}
-	
+
 	public void hospitalize() {
 		status = 2;
 	}
