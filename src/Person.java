@@ -85,7 +85,9 @@ public class Person {
 	}
 
 	public void hospitalize() {
-		status = 2;
+		if (!firstInfected) {
+			status = 2;
+		}
 	}
 
 	public void kill() {
